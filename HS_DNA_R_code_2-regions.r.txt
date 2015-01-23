@@ -1,0 +1,208 @@
+##START##
+
+
+#The working directory is where your exported results file from the bioanalyzer is.
+#Note the double backslashes, you need double backslashes or a single forward slash
+#Your working directory must be within double quotes
+#example: dir <- "S:\\Genomics\\Molbio_Users\\BEF\\Bioanalyzer"
+
+#change it and copy and paste into R  (Ensure Results file is exported into directory
+
+
+
+dir <- "S:\\Genomics\\Molbio_Users\\BEF\\brian_fleharty\\bef16\\2011-09-13\\testing\\rre_3-regions"
+
+setwd(dir)
+myfiles<-list.files()
+
+myfiles<-list.files()
+which(substr(myfiles,71,81)=="Results.csv")
+results<-myfiles[which(substr(myfiles,71,81)=="Results.csv")]
+n <- which(substr(myfiles,71,81)=="Results.csv")
+targets <- read.delim(myfiles[n[1]], sep=",",header=F,skip=14,as.is=T)
+length(n)
+targets2<- read.delim(myfiles[n[1]], sep=",",header=F,skip=0,as.is=T)
+str1<-substr(targets2[1,2],1,69)
+str1
+str2<-"_S"
+str3<-paste(str1,str2,sep="")
+str3
+chip_num<-length(n)
+samp_num_chip<-length(grep(str3,myfiles))
+samp_num<-length(which(substr(myfiles,71,76)=="Sample"))
+samples1<- matrix(NA, ncol=chip_num, nrow=samp_num)
+
+
+
+
+
+
+
+
+
+
+for(i in 1:chip_num)
+{
+#mod chip numb
+targets2<- read.delim(myfiles[n[i]], sep=",",header=F,skip=0,as.is=T)
+str1<-substr(targets2[1,2],1,69)
+str2<-"_S"
+str3<-paste(str1,str2,sep="")
+samp_num_chip<-length(grep(str3,myfiles))
+
+targets <- read.delim(results[i], sep=",",header=F,skip=14,as.is=T)
+targets[1:5,]
+which(targets[,1]=="Sample Name")
+length(which(targets[,1]=="Sample Name"))
+samples<-as.character(targets[which(targets[,1]=="Sample Name"),2])
+tbl<-which(targets[,1]=="Region Table")
+length(which(targets[,1]=="Region Table"))
+
+tbl[1]
+tbl[1]
+colnms<-as.character(targets[tbl[1]+1,1:10])
+
+#mod sample numb
+str1<-substr(targets2[1,2],1,52)
+str4<-"_Sample"
+
+for(j in 1:samp_num_chip)
+{
+iii<-j
+end.st<-".csv"
+str5<-paste(str1,str4,iii,end.st,sep="")
+samples1[j,i]<-str5
+}
+}
+
+
+
+samples1
+grep("2100",samples1)
+samples1<-samples1[grep("2100",samples1)]
+samples1
+
+write.table(samples1,file=paste(dir,"\\ba_lane.txt",sep=""), sep="\t",col.names=NA)
+
+
+
+
+
+ramp <- colorRamp(c("darkmagenta","white"))
+elec <- read.delim("ba_lane.txt", sep="\t",header=T,as.is=T)
+qc.mat <- matrix(NA, ncol=3, nrow=nrow(elec))
+
+
+
+
+
+#tbl<-which(targets[,1]=="Peak Table")
+#length(which(targets[,1]=="Peak Table"))
+#colnms<-as.character(targets[tbl[1]+1,1:10])
+
+
+
+mat1 <- matrix(NA, ncol=length(colnms), nrow=nrow(qc.mat))
+colnames(mat1)<-colnms
+rownames(mat1)<-qc.mat[,1]
+#read.delim("samples02.txt", sep="\t",header=T,as.is=T)
+for(i in 1:length(results))
+{
+targets <- read.delim(results[i], sep=",",header=F,skip=14,as.is=T)
+targets[1:5,]
+which(targets[,1]=="Region Table")
+length(which(targets[,1]=="Region Table"))
+samples<-as.character(targets[which(targets[,1]=="Region Table"),2])
+tbl<-which(targets[,1]=="Region Table")
+length(which(targets[,1]=="Region Table"))
+tbl[1]
+tbl[1]
+#colnms<-as.character(targets[(tbl[1]+1):(tbl[1]+4),1])
+
+
+
+
+###Region1
+
+for (j in 1:length(samples))
+{
+mat1[((11*(i-1))+j),]<-as.matrix(targets[(tbl[j]+2),1:10])
+#mat1[((11*(i-1))+j),]<-as.matrix(targets[(tbl[j]+1):(tbl[j]+4),2])
+}
+}
+mat1
+qc.mat
+r1<-mat1
+
+
+
+
+
+#cbind(mat1,qc.mat)
+#colnames(qc.mat)<-c("samples_name","B-RIN","B-RIN 28s/18s ratio")
+
+samples<-as.character(targets[which(targets[,1]=="Sample Name"),2])
+#write.table(mat1,file=paste(dir,"\\region1.txt",sep=""), sep="\t",col.names=NA)
+write.table(cbind(samples,mat1),file=paste(dir,"\\region1.txt",sep=""), sep="\t",col.names=NA)
+##
+
+
+
+
+
+
+
+
+
+
+
+
+###Region2
+
+for (j in 1:length(samples))
+{
+mat1[((11*(i-1))+j),]<-as.matrix(targets[(tbl[j]+3),1:10])
+#mat1[((11*(i-1))+j),]<-as.matrix(targets[(tbl[j]+1):(tbl[j]+4),2])
+}
+}
+mat1
+qc.mat
+r2<-mat1
+
+
+
+
+
+#cbind(mat1,qc.mat)
+#colnames(qc.mat)<-c("samples_name","B-RIN","B-RIN 28s/18s ratio")
+
+samples<-as.character(targets[which(targets[,1]=="Sample Name"),2])
+#write.table(mat1,file=paste(dir,"\\region2.txt",sep=""), sep="\t",col.names=NA)
+write.table(cbind(samples,mat1),file=paste(dir,"\\region2.txt",sep=""), sep="\t",col.names=NA)
+##
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Rhonda's Patch so only pertinent info is in table
+
+cbind(samples,(rbind(r1,r2)[,c(1,6,8,9)]))
+
+write.table(cbind(samples,(rbind(r1,r2)[,c(1,6,8,9)])),file=paste(dir,"\\RRE Rhondas Region.txt",sep=""), sep="\t",col.names=NA)
+
+
+
+
+###END###
